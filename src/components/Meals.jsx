@@ -1,5 +1,5 @@
 import MealItem from './MealItem.jsx';
-import { API_URL } from "./utils/api.js";
+
 
 import useHttp from './hooks/useHTTP.js';
 import Error from './Error.jsx';
