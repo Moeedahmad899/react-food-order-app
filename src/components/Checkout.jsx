@@ -19,10 +19,7 @@ export default function Checkout() {
   const cartCTX = useContext(CartContext);
   const userProgressCTX = useContext(UserProgressContext);
 
-  const { data, error, sendRequest, clearData } = useHttp(
-    "http://localhost:3000/orders",
-    requestConfig
-  );
+  const { data, error, sendRequest, clearData } = useHttp("/api/orders", requestConfig);
 
   const cartTotal = cartCTX.items.reduce((totalPrice, item) => {
     return totalPrice + item.quantity * item.price;
