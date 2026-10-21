@@ -1,10 +1,10 @@
-import { useContext } from "react";
-import CartContext from "./store/CartContext";
-import Modal from "./UI/Model";
-import { currenncyFormatter } from "../utils/formatting";
-import Button from "./UI/Button";
-import UserProgressContext from "./store/UserProgressContext";
-import CartItem from "./UI/CartItem";
+import CartContext from '../../store/CartContext';
+import UserProgressContext from '../../store/UserProgressContext';
+import Modal from '../ui/Modal';
+import Button from '../ui/Button';
+import CartItem from './CartItem';
+import { useContext } from 'react';
+import {currenncyFormatter} from '../../utils/formatting.js'
 function Cart() {
     const cartCTX = useContext(CartContext);
     const userProgressCTX = useContext(UserProgressContext);

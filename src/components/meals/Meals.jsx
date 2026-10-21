@@ -1,8 +1,6 @@
-import MealItem from './MealItem.jsx';
-
-
-import useHttp from './hooks/useHTTP.js';
-import Error from './Error.jsx';
+import MealItem from './MealItem';
+import useHttp from '../../hooks/useHttp';
+import ErrorMessage from '../ui/ErrorMessage';
 const requestConfig = {};
 
 export default function Meals() {

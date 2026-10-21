@@ -1,8 +1,8 @@
+import logoImg from '../../assets/logo.jpg';
+import Button from '../ui/Button';
+import CartContext from '../../store/CartContext';
+import UserProgressContext from '../../store/UserProgressContext';
 import { useContext } from 'react';
-import logoImg from '../assets/logo.jpg'
-import Button from './UI/Button';
-import CartContext from "./store/CartContext";
-import UserProgressContext from './store/UserProgressContext';
 function Header() {
     
     const cartCTX = useContext(CartContext);
