@@ -1,79 +1,53 @@
+import { useContext } from 'react';
 import Modal from '../ui/Modal';
 import Input from '../ui/Input';
 import Button from '../ui/Button';
-import { useContext } from 'react';
+import ErrorMessage from '../ui/ErrorMessage';
 import CartContext from '../../store/CartContext';
 import UserProgressContext from '../../store/UserProgressContext';
-import useHttp from '../../hooks/useHttp';
-import { useActionState } from 'react';
-import {currenncyFormatter} from '../../utils/formatting.js'
-const requestConfig = {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-};
+import { useSubmitOrder } from '../../hooks/useSubmitOrder';
 
+import { currenncyFormatter } from '../../utils/formatting';
 export default function Checkout() {
   const cartCTX = useContext(CartContext);
   const userProgressCTX = useContext(UserProgressContext);
+  const { mutate, isPending, isError, isSuccess, error, reset } = useSubmitOrder();
 
-  const { data, error, sendRequest, clearData } = useHttp("/api/orders", requestConfig);
-
-  const cartTotal = cartCTX.items.reduce((totalPrice, item) => {
-    return totalPrice + item.quantity * item.price;
-  }, 0);
+  const cartTotal = cartCTX.items.reduce(
+    (total, item) => total + item.quantity * item.price,
+    0
+  );
 
   function handleClose() {
     userProgressCTX.hideCheckout();
+    reset(); // clear old error/success so it doesn't show next time
   }
 
   function handleFinish() {
     userProgressCTX.hideCheckout();
     cartCTX.clearCart();
-    clearData();
+    reset();
   }
 
-  async function checkoutAction(prevState, fd) {
-    const userData = Object.fromEntries(fd.entries());
+  function handleSubmit(event) {
+    event.preventDefault();
+    const customer = Object.fromEntries(new FormData(event.target));
 
-    await sendRequest(
-      JSON.stringify({
-        order: {
-          items: cartCTX.items,
-          customer: userData,
-        },
-      })
-    );
+    mutate({
+      // send only what the server needs — never trust prices from the browser
+      items: cartCTX.items.map(({ id, quantity }) => ({ id, quantity })),
+      customer,
+    });
   }
 
-  const [formState, formAction, isSending] = useActionState(
-    checkoutAction,
-    null
-  );
+  const isOpen = userProgressCTX.progress === 'checkout';
 
-  let actions = (
-    <>
-      <Button type="button" textOnly onClick={handleClose}>
-        Close
-      </Button>
-      <Button>Submit Order</Button>
-    </>
-  );
-
-  if (isSending) {
-    actions = <span>sending order data...</span>;
-  }
-
-  if (data && !error) {
+  if (isSuccess) {
     return (
-      <Modal
-        open={userProgressCTX.progress === "checkout"}
-        onClose={handleFinish}
-      >
-        <h2>Success</h2>
-        <p>Your Order was successfully submitted!</p>
-        <p className="model-actions">
+      <Modal open={isOpen} onClose={handleFinish}>
+        <h2>Success!</h2>
+        <p>Your order was submitted successfully.</p>
+        <p className="modal-actions">
           <Button onClick={handleFinish}>Okay</Button>
         </p>
       </Modal>
@@ -81,10 +55,10 @@ export default function Checkout() {
   }
 
   return (
-    <Modal open={userProgressCTX.progress === "checkout"} onClose={handleClose}>
-      <form action={formAction}>
-        <h2>CHECKOUT</h2>
-        <p>TOTAL AMOUNT: {currenncyFormatter.format(cartTotal)}</p>
+    <Modal open={isOpen} onClose={handleClose}>
+      <form onSubmit={handleSubmit}>
+        <h2>Checkout</h2>
+        <p>Total amount: {currenncyFormatter.format(cartTotal)}</p>
 
         <Input label="Full Name" type="text" id="name" />
         <Input label="E-Mail Address" type="email" id="email" />
@@ -94,9 +68,22 @@ export default function Checkout() {
           <Input label="City" type="text" id="city" />
         </div>
 
-        {error && <Error title="failed to submit order" message={error} />}
+        {isError && (
+          <ErrorMessage title="Failed to submit order" message={error.message} />
+        )}
 
-        <p className="model-actions">{actions}</p>
+        <p className="modal-actions">
+          {isPending ? (
+            <span>Sending order...</span>
+          ) : (
+            <>
+              <Button type="button" textOnly onClick={handleClose}>
+                Close
+              </Button>
+              <Button>Submit Order</Button>
+            </>
+          )}
+        </p>
       </form>
     </Modal>
   );
