@@ -1,23 +1,22 @@
-import Header from "./components/Header";
-import Meals from "./components/Meals";
-import Cart from "./components/Cart";
-import { CartContextProvider } from "./components/store/CartContext";
-import {UserProgressContextProvider} from "./components/store/UserProgressContext";
-import Checkout from "./components/Checkout";
+import Header from "./components/layout/Header";
+import Meals from "./components/meals/Meals";
+import Cart from "./components/cart/Cart";
+import Checkout from "./components/checkout/Checkout";
+import { CartContextProvider } from "./store/CartContext";
+import { UserProgressContextProvider } from "./store/UserProgressContext";
+import { Toaster } from "react-hot-toast";
+
 function App() {
   return (
     <UserProgressContextProvider>
-    <CartContextProvider>
-    <Header/>
-      <Meals/>
-      <Cart/>
-      <Checkout/>
-    </CartContextProvider>
+      <CartContextProvider>
+        <Toaster position="top-left" />
+        <Header />
+        <Meals />
+        <Cart />
+        <Checkout />
+      </CartContextProvider>
     </UserProgressContextProvider>
-
-
-    
-  
   );
 }
 
