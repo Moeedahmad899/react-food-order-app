@@ -110,6 +110,9 @@ h1 {
 .cart h2 {
   margin: 1rem 0;
 }
+.cart {
+  width: 400px;
+}
 
 .cart ul {
   list-style: none;

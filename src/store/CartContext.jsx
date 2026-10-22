@@ -1,82 +1,54 @@
-import { createContext, useReducer } from "react";
+import { createContext, useCallback, useContext, useMemo, useReducer } from 'react';
+import { cartReducer, initialCartState, CART_ACTIONS } from './cartReducer';
+import toast from "react-hot-toast";
 
-const CartContext = createContext({
-    items: [],
-    addItem: (item) => {},
-    removeItem: (id) => {},
-    clearCart: () => {}
-});
-
-function cartReducer(state, action) {
-    if (action.type === "ADD_ITEM") {
-        const existingCartItemIndex = state.items.findIndex(
-            (item) => item.id === action.item.id
-        );
-        const updatedItems = [...state.items];
-
-        if (existingCartItemIndex > -1) {
-            const existingItem = state.items[existingCartItemIndex];
-            const updatedItem = {
-                ...existingItem,
-                quantity: existingItem.quantity + 1
-            };
-            updatedItems[existingCartItemIndex] = updatedItem;
-        } else {
-            updatedItems.push({ ...action.item, quantity: 1 });
-        }
-
-        return { ...state, items: updatedItems };
-    }
-
-    if (action.type === "REMOVE_ITEM") {
-        const existingCartItemIndex = state.items.findIndex(
-            (item) => item.id === action.id
-        );
-        const existingCartItem = state.items[existingCartItemIndex];
-        const updatedItems = [...state.items];
-
-        if (existingCartItem.quantity === 1) {
-            updatedItems.splice(existingCartItemIndex, 1);
-        } else {
-            const updatedItem = {
-                ...existingCartItem,
-                quantity: existingCartItem.quantity - 1
-            };
-            updatedItems[existingCartItemIndex] = updatedItem;
-        }
-
-        return { ...state, items: updatedItems };
-    }
-    if(action.type === "CLEAR_CART"){
-        return {...state,items:[]}
-    }
-    return state;
-}
+const CartContext = createContext(null);
 
 export function CartContextProvider({ children }) {
-    const [cart, dispatchCartAction] = useReducer(cartReducer, { items: [] });
+  const [state, dispatch] = useReducer(cartReducer, initialCartState);
 
-    function addItem(item) {
-        dispatchCartAction({ type: "ADD_ITEM", item });
-    }
+  const addItem = useCallback((item) => {
+    dispatch({ type: CART_ACTIONS.ADD_ITEM, item });
+      toast.success(`${item.name} has been added to cart`);
 
-    function removeItem(id) {
-        dispatchCartAction({ type: "REMOVE_ITEM", id });
-    }
-     function clearCart() {
-        dispatchCartAction({ type: "CLEAR_CART" });
-    }
+  }, []);
 
-    const cartContext = {
-        items: cart.items,
-        addItem,
-        removeItem,
-        clearCart
-    };
+  const removeItem = useCallback((id) => {
+    dispatch({ type: CART_ACTIONS.REMOVE_ITEM, id });
+      toast("Item removed from cart");
 
-    return (
-        <CartContext.Provider value={cartContext}>{children}</CartContext.Provider>
+  }, []);
+
+  const clearCart = useCallback(() => {
+    dispatch({ type: CART_ACTIONS.CLEAR_CART });
+      toast.error("Cart cleared");
+
+  }, []);
+
+  const value = useMemo(() => {
+    const totalQuantity = state.items.reduce((sum, item) => sum + item.quantity, 0);
+    const totalPrice = state.items.reduce(
+      (sum, item) => sum + item.quantity * item.price,
+      0
     );
+
+    return {
+      items: state.items,
+      totalQuantity,
+      totalPrice,
+      addItem,
+      removeItem,
+      clearCart,
+    };
+  }, [state.items, addItem, removeItem, clearCart]);
+
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
 
-export default CartContext;
+export function useCart() {
+  const context = useContext(CartContext);
+  if (!context) {
+    throw new Error('useCart must be used inside <CartContextProvider>');
+  }
+  return context;
+}

@@ -1,30 +1,23 @@
-
 import Button from '../ui/Button';
-import CartContext from '../../store/CartContext';
-import { useContext } from 'react';
-import {currenncyFormatter} from '../../utils/formatting.js'
-function MealItem({meal}) {
-    const cartCTX = useContext(CartContext);
-    function handleAddMealToCar(){
+import { useCart } from '../../store/CartContext';
 
-   cartCTX.addItem(meal);
-    }
+import  { currenncyFormatter}  from "../../utils/formatting"
+export default function MealItem({ meal }) {
+  const { addItem } = useCart();
+
   return (
-   <li className="meal-item">
-    <article>
-       <img src={`/${meal.image}`} alt={meal.name} />
-
+    <li className="meal-item">
+      <article>
+        <img src={`/${meal.image}`} alt={meal.name} />
         <div>
-            <h3>{meal.name}</h3>
-            <p className="meal-item-price">{currenncyFormatter.format(meal.price)}</p>
-             <p className="meal-item-description">{meal.description}</p>
+          <h3>{meal.name}</h3>
+          <p className="meal-item-price">{currenncyFormatter.format(meal.price)}</p>
+          <p className="meal-item-description">{meal.description}</p>
         </div>
         <p className="meal-item-actions">
-            <Button onClick={handleAddMealToCar}>ADD TO CART</Button>
+          <Button onClick={() => addItem(meal)}>Add to Cart</Button>
         </p>
-    </article>
-   </li>
+      </article>
+    </li>
   );
 }
-
-export default MealItem;

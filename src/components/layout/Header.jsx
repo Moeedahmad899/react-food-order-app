@@ -1,30 +1,23 @@
 import logoImg from '../../assets/logo.jpg';
 import Button from '../ui/Button';
-import CartContext from '../../store/CartContext';
-import UserProgressContext from '../../store/UserProgressContext';
-import { useContext } from 'react';
-function Header() {
-    
-    const cartCTX = useContext(CartContext);
-    const userProgressCTX = useContext(UserProgressContext);
-    const totalCartItems = cartCTX.items.reduce((totalNumberOfItems, item)=>{
-        return totalNumberOfItems + item.quantity;
-    },0)
+import { useCart } from '../../store/CartContext';
+import { useUserProgress } from '../../store/UserProgressContext';
 
-    function handleShowCart(){
-        userProgressCTX.showCart();
-    }
+export default function Header() {
+  const { totalQuantity } = useCart();
+  const { showCart } = useUserProgress();
+
   return (
-   <header id="main-header">
-    <div id="title">
-        <img src={logoImg} alt="" />
+    <header id="main-header">
+      <div id="title">
+        <img src={logoImg} alt="ReactFood logo" />
         <h1>ReactFood</h1>
-    </div>
-    <nav>
-        <Button onClick={handleShowCart} textOnly>CART ( {totalCartItems})</Button>
-    </nav>
-   </header>
+      </div>
+      <nav>
+        <Button textOnly onClick={showCart}>
+          Cart ({totalQuantity})
+        </Button>
+      </nav>
+    </header>
   );
 }
-
-export default Header;
