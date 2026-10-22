@@ -1,5 +1,11 @@
-import { createContext, useCallback, useContext, useMemo, useReducer } from 'react';
-import { cartReducer, initialCartState, CART_ACTIONS } from './cartReducer';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useReducer,
+} from "react";
+import { cartReducer, initialCartState, CART_ACTIONS } from "./cartReducer";
 import toast from "react-hot-toast";
 
 const CartContext = createContext(null);
@@ -9,27 +15,27 @@ export function CartContextProvider({ children }) {
 
   const addItem = useCallback((item) => {
     dispatch({ type: CART_ACTIONS.ADD_ITEM, item });
-      toast.success(`${item.name} has been added to cart`);
-
+    toast.success(`${item.name} has been added to cart`);
   }, []);
 
   const removeItem = useCallback((id) => {
     dispatch({ type: CART_ACTIONS.REMOVE_ITEM, id });
-      toast("Item removed from cart");
-
+    toast("Item removed from cart");
   }, []);
 
   const clearCart = useCallback(() => {
     dispatch({ type: CART_ACTIONS.CLEAR_CART });
-      toast.error("Cart cleared");
-
+    toast.error("Cart cleared");
   }, []);
 
   const value = useMemo(() => {
-    const totalQuantity = state.items.reduce((sum, item) => sum + item.quantity, 0);
+    const totalQuantity = state.items.reduce(
+      (sum, item) => sum + item.quantity,
+      0,
+    );
     const totalPrice = state.items.reduce(
       (sum, item) => sum + item.quantity * item.price,
-      0
+      0,
     );
 
     return {
@@ -48,7 +54,7 @@ export function CartContextProvider({ children }) {
 export function useCart() {
   const context = useContext(CartContext);
   if (!context) {
-    throw new Error('useCart must be used inside <CartContextProvider>');
+    throw new Error("useCart must be used inside <CartContextProvider>");
   }
   return context;
 }

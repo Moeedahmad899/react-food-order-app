@@ -1,7 +1,7 @@
-import Button from '../ui/Button';
-import { useCart } from '../../store/CartContext';
+import Button from "../ui/Button";
+import { useCart } from "../../store/CartContext";
 
-import  { currenncyFormatter}  from "../../utils/formatting"
+import { currenncyFormatter } from "../../utils/formatting";
 export default function MealItem({ meal }) {
   const { addItem } = useCart();
 
@@ -11,7 +11,9 @@ export default function MealItem({ meal }) {
         <img src={`/${meal.image}`} alt={meal.name} />
         <div>
           <h3>{meal.name}</h3>
-          <p className="meal-item-price">{currenncyFormatter.format(meal.price)}</p>
+          <p className="meal-item-price">
+            {currenncyFormatter.format(meal.price)}
+          </p>
           <p className="meal-item-description">{meal.description}</p>
         </div>
         <p className="meal-item-actions">

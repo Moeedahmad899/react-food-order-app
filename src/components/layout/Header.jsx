@@ -1,7 +1,7 @@
-import logoImg from '../../assets/logo.jpg';
-import Button from '../ui/Button';
-import { useCart } from '../../store/CartContext';
-import { useUserProgress } from '../../store/UserProgressContext';
+import logoImg from "../../assets/logo.jpg";
+import Button from "../ui/Button";
+import { useCart } from "../../store/CartContext";
+import { useUserProgress } from "../../store/UserProgressContext";
 
 export default function Header() {
   const { totalQuantity } = useCart();

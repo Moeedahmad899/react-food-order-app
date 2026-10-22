@@ -1,9 +1,9 @@
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useMemo, useState } from "react";
 
 export const PROGRESS = {
-  NONE: 'none',
-  CART: 'cart',
-  CHECKOUT: 'checkout',
+  NONE: "none",
+  CART: "cart",
+  CHECKOUT: "checkout",
 };
 
 const UserProgressContext = createContext(null);
@@ -18,18 +18,22 @@ export function UserProgressContextProvider({ children }) {
       showCheckout: () => setProgress(PROGRESS.CHECKOUT),
       close: () => setProgress(PROGRESS.NONE),
     }),
-    [progress]
+    [progress],
   );
 
   return (
-    <UserProgressContext.Provider value={value}>{children}</UserProgressContext.Provider>
+    <UserProgressContext.Provider value={value}>
+      {children}
+    </UserProgressContext.Provider>
   );
 }
 
 export function useUserProgress() {
   const context = useContext(UserProgressContext);
   if (!context) {
-    throw new Error('useUserProgress must be used inside <UserProgressContextProvider>');
+    throw new Error(
+      "useUserProgress must be used inside <UserProgressContextProvider>",
+    );
   }
   return context;
 }

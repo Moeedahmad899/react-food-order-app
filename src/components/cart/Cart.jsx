@@ -1,9 +1,9 @@
-import Modal from '../ui/Modal';
-import Button from '../ui/Button';
-import CartItem from './CartItem';
-import { useCart } from '../../store/CartContext';
-import { useUserProgress, PROGRESS } from '../../store/UserProgressContext';
-import { currenncyFormatter } from '../../utils/formatting';
+import Modal from "../ui/Modal";
+import Button from "../ui/Button";
+import CartItem from "./CartItem";
+import { useCart } from "../../store/CartContext";
+import { useUserProgress, PROGRESS } from "../../store/UserProgressContext";
+import { currenncyFormatter } from "../../utils/formatting";
 
 export default function Cart() {
   const { items, totalPrice, addItem, removeItem } = useCart();
@@ -38,7 +38,9 @@ export default function Cart() {
         <Button textOnly onClick={close}>
           Close
         </Button>
-        {items.length > 0 && <Button onClick={showCheckout}>Go to Checkout</Button>}
+        {items.length > 0 && (
+          <Button onClick={showCheckout}>Go to Checkout</Button>
+        )}
       </p>
     </Modal>
   );

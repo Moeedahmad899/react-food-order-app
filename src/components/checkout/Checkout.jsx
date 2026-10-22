@@ -1,22 +1,19 @@
+import Modal from "../ui/Modal";
+import Input from "../ui/Input";
+import Button from "../ui/Button";
+import ErrorMessage from "../ui/ErrorMessage";
+import { useSubmitOrder } from "../../hooks/useSubmitOrder";
+import { useCart } from "../../store/CartContext";
+import { useUserProgress, PROGRESS } from "../../store/UserProgressContext";
 
-import Modal from '../ui/Modal';
-import Input from '../ui/Input';
-import Button from '../ui/Button';
-import ErrorMessage from '../ui/ErrorMessage';
-
-import { useSubmitOrder } from '../../hooks/useSubmitOrder';
-import { useCart } from '../../store/CartContext';
-import { useUserProgress , PROGRESS } from '../../store/UserProgressContext';
-import { currenncyFormatter } from '../../utils/formatting';
 export default function Checkout() {
   const { items, totalPrice, clearCart } = useCart();
   const { progress, close } = useUserProgress();
- 
-  const { mutate, isPending, isError, isSuccess, error, reset } = useSubmitOrder();
 
- 
+  const { mutate, isPending, isError, isSuccess, error, reset } =
+    useSubmitOrder();
 
-    function handleClose() {
+  function handleClose() {
     close();
     reset();
   }
@@ -36,7 +33,7 @@ export default function Checkout() {
     });
   }
 
-    const isOpen = progress === PROGRESS.CHECKOUT;
+  const isOpen = progress === PROGRESS.CHECKOUT;
 
   if (isSuccess) {
     return (
@@ -65,7 +62,10 @@ export default function Checkout() {
         </div>
 
         {isError && (
-          <ErrorMessage title="Failed to submit order" message={error.message} />
+          <ErrorMessage
+            title="Failed to submit order"
+            message={error.message}
+          />
         )}
 
         <p className="modal-actions">

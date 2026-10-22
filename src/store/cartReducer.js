@@ -1,7 +1,7 @@
 export const CART_ACTIONS = {
-  ADD_ITEM: 'ADD_ITEM',
-  REMOVE_ITEM: 'REMOVE_ITEM',
-  CLEAR_CART: 'CLEAR_CART',
+  ADD_ITEM: "ADD_ITEM",
+  REMOVE_ITEM: "REMOVE_ITEM",
+  CLEAR_CART: "CLEAR_CART",
 };
 
 export const initialCartState = { items: [] };
@@ -16,7 +16,7 @@ export function cartReducer(state, action) {
         return {
           ...state,
           items: state.items.map((item) =>
-            item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+            item.id === id ? { ...item, quantity: item.quantity + 1 } : item,
           ),
         };
       }
@@ -44,7 +44,9 @@ export function cartReducer(state, action) {
       return {
         ...state,
         items: state.items.map((item) =>
-          item.id === action.id ? { ...item, quantity: item.quantity - 1 } : item
+          item.id === action.id
+            ? { ...item, quantity: item.quantity - 1 }
+            : item,
         ),
       };
     }
